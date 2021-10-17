@@ -19,7 +19,7 @@ Route::get('/auth/redirect', function () {
     return Socialite::driver('google')->redirect();
 });
 
-Route::get('/auth/callback', function () {
+Route::get('/auth/google/callback', function () {
     $user = Socialite::driver('google')->user();
 
     // $user->token
