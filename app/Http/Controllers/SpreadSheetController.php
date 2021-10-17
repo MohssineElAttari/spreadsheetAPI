@@ -9,6 +9,7 @@ use Google_Service_Sheets;
 use Google_Service_Sheets_ValueRange;
 use App\Services\ClientSheetGoogle;
 use Google\Service\AdExchangeBuyerII\Size;
+use stdClass;
 
 class SpreadSheetController extends Controller
 {
@@ -43,13 +44,32 @@ class SpreadSheetController extends Controller
     // Fetching data from your spreadsheet and storing it.
     public function readSheet(Request $linkSheet)
     {
+        // dd($linkSheet->link);
         $spreadsheetID = $this->GetSpreadsheetID($linkSheet->link);
         $get_range = $this->getRanges($spreadsheetID)[0];
 
         //Request to get data from spreadsheet.
         $response = $this->service->spreadsheets_values->get($spreadsheetID, $get_range);
         $values = $response->getValues();
-        return response(["data" => $values]);
+
+
+        $columns = $values[0];
+
+        $list = array();
+        for ($i = 0; $i < count($values); $i++) {
+            if ($i == 0) continue;
+
+            $value = $values[$i];
+            // dd($value);
+            $obj = new stdClass();
+            for ($j = 0; $j < count($columns); $j++) {
+                // dd($value[$j]);
+                $obj->{$columns[$j]} = $value[$j];//rda
+            }
+            array_push($list, $obj);
+        }
+
+        return response(["data" => $list]);
     }
     //add data in spreadSheet
     public function addRowInSheet(Request $request)
