@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -14,16 +15,18 @@ use Laravel\Socialite\Facades\Socialite;
 |
 */
 
+Route::get('/auth/google/redirect', [LoginController::class, 'redirectToGoogle']);
+Route::get('/auth/google/callback', [LoginController::class, 'handleGoogleCallback']);
 
-Route::get('/auth/redirect', function () {
-    return Socialite::driver('google')->redirect();
-});
+// Route::get('/auth/google/redirect', function () {
+//     return Socialite::driver('google')->redirect();
+// });
 
-Route::get('/auth/google/callback', function () {
-    $user = Socialite::driver('google')->user();
+// Route::get('/auth/google/callback', function () {
+//     $user = Socialite::driver('google')->user();
 
-    // $user->token
-});
+//     // $user->token
+// });
 
 
 Route::get('/', function () {
