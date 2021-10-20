@@ -24,4 +24,9 @@ class ClientSheetGoogle
     {
         return $this->service;
     }
+
+    public function getClient()
+    {
+        return $this->client;
+    }
 }
