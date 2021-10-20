@@ -25,4 +25,6 @@ Route::post('addRowInSheet', [SpreadSheetController::class, 'addRowInSheet']);
 
 Route::put('updateRowInSheet', [SpreadSheetController::class, 'updateRowInSheet']);
 
+Route::get('testAuth', [SpreadSheetController::class, 'testAuth']);
+
 
