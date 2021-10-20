@@ -23,6 +23,7 @@ class LoginController extends Controller
         try {
             //create a user using socialite driver google
             $user = Socialite::driver('google')->user();
+            // dd($user);
             // if the user exits, use that user and login
             // dd($user);
 
@@ -37,6 +38,9 @@ class LoginController extends Controller
                     'name' => $user->name,
                     'email' => $user->email,
                     'google_id' => $user->id,
+                    'access_token' => $user->token,
+                    'expires_in' => $user->expiresIn,
+                    'avatar' => $user->avatar,
                     'password' => encrypt('')
                 ]);
 
