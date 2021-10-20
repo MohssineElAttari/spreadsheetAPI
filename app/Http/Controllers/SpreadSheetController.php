@@ -9,15 +9,18 @@ use Google_Service_Sheets;
 use Google_Service_Sheets_ValueRange;
 use App\Services\ClientSheetGoogle;
 use Google\Service\AdExchangeBuyerII\Size;
+use Illuminate\Support\Facades\Auth;
 use stdClass;
 
 class SpreadSheetController extends Controller
 {
 
     private $service;
+    private $client;
     public function __construct()
     {
         $clientSG = new ClientSheetGoogle;
+        $this->client = $clientSG->getClient();
         $this->service = $clientSG->getService();
     }
     //get SpreadsheetID from spreadsheet link.
@@ -42,12 +45,33 @@ class SpreadSheetController extends Controller
     }
     //Reading data from spreadsheet.
     // Fetching data from your spreadsheet and storing it.
+    public function testAuth()
+    {
+        if(Auth::check()){
+            $user = Auth::user();
+            dd($user->id);
+        }else {
+            dd("walo ahamadi");
+        }
+       
+       
+    }
     public function readSheet(Request $linkSheet)
     {
-        // dd($linkSheet->link);
+       
+
+        // $arr_token = (array) ;
+        $accessToken = array(
+            'access_token' => $arr_token['access_token'],
+            'expires_in' => $arr_token['expires_in'],
+        );
+
+
+        dd($this->client->getAccessToken());
         $spreadsheetID = $this->GetSpreadsheetID($linkSheet->link);
         $get_range = $this->getRanges($spreadsheetID)[0];
 
+        $this->client->setAccessToken('ya29.a0ARrdaM9IfBTfDTBIsQk8Qh8vuMg9z6anvEbB7VZbjLFoRKx7cv9_AwBDWI-AmzIZErst3tkSB1AHkcUiToITofUaGONUHEzdVVZL3lzEJ0YZ9e8xcUV5oHwliiGKqP35dDr6EpPHZtiJ557rmMkOmMWGGeON');
         //Request to get data from spreadsheet.
         $response = $this->service->spreadsheets_values->get($spreadsheetID, $get_range);
         $values = $response->getValues();
@@ -64,7 +88,7 @@ class SpreadSheetController extends Controller
             $obj = new stdClass();
             for ($j = 0; $j < count($columns); $j++) {
                 // dd($value[$j]);
-                $obj->{$columns[$j]} = $value[$j];//rda
+                $obj->{$columns[$j]} = $value[$j]; //rda
             }
             array_push($list, $obj);
         }
