@@ -15,9 +15,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+
+
+Route::group(['middleware' => ['auth:sanctum']], function () {
+    // Route::get('/user', function (Request $request) {
+    //     return $request->user();
+    // });
 
 Route::post('readSheet', [SpreadSheetController::class, 'readSheet']);
 
@@ -27,4 +30,4 @@ Route::put('updateRowInSheet', [SpreadSheetController::class, 'updateRowInSheet'
 
 Route::get('testAuth', [SpreadSheetController::class, 'testAuth']);
 
-
+});
