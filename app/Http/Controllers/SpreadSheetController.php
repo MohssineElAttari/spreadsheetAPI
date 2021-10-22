@@ -47,12 +47,7 @@ class SpreadSheetController extends Controller
     // Fetching data from your spreadsheet and storing it.
     public function testAuth()
     {
-        if(Auth::check()){
-            $user = Auth::user();
-            dd($user->id);
-        }else {
-            dd("walo ahamadi");
-        }
+        dd(auth('sanctum')->user());
        
        
     }
@@ -65,7 +60,6 @@ class SpreadSheetController extends Controller
             'access_token' => $arr_token['access_token'],
             'expires_in' => $arr_token['expires_in'],
         );
-
 
         dd($this->client->getAccessToken());
         $spreadsheetID = $this->GetSpreadsheetID($linkSheet->link);
