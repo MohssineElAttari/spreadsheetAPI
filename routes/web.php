@@ -15,8 +15,18 @@ use Laravel\Socialite\Facades\Socialite;
 |
 */
 
+// login Google
 Route::get('/auth/google/redirect', [LoginController::class, 'redirectToGoogle']);
 Route::get('/auth/google/callback', [LoginController::class, 'handleGoogleCallback']);
+
+//SpreadSheet
+Route::post('readSheet', [SpreadSheetController::class, 'readSheet']);
+
+Route::post('addRowInSheet', [SpreadSheetController::class, 'addRowInSheet']);
+
+Route::put('updateRowInSheet', [SpreadSheetController::class, 'updateRowInSheet']);
+
+Route::get('testAuth', [SpreadSheetController::class, 'testAuth']);
 
 // Route::get('/auth/google/redirect', function () {
 //     return Socialite::driver('google')->redirect();
