@@ -21,13 +21,4 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     // Route::get('/user', function (Request $request) {
     //     return $request->user();
     // });
-
-Route::post('readSheet', [SpreadSheetController::class, 'readSheet']);
-
-Route::post('addRowInSheet', [SpreadSheetController::class, 'addRowInSheet']);
-
-Route::put('updateRowInSheet', [SpreadSheetController::class, 'updateRowInSheet']);
-
-Route::get('testAuth', [SpreadSheetController::class, 'testAuth']);
-
 });
