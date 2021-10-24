@@ -17,7 +17,9 @@ class LoginController extends Controller
             'access_type' => 'offline',
             'approval_prompt' => 'force'
         ];
-        return Socialite::driver('google')->scopes(["https://www.googleapis.com/auth/drive"])->with($parameters)->redirect();
+        // return Socialite::driver('google')->with($parameters)->redirect();
+        // return Socialite::driver('google')->scopes(["https://www.googleapis.com/auth/spreadsheets"])->with($parameters)->redirect();
+
         return Socialite::driver('google')->redirect();
     }
 
@@ -27,34 +29,25 @@ class LoginController extends Controller
 
             //create a user using socialite driver google
             $user = Socialite::driver('google')->user();
-
+            // dd($user);
             $finduser = User::where('google_id', $user->id)->first();
+            // dd($finduser);
 
-            $data = [
-                'token' => $finduser->token,
-                'expires_in' => $finduser->expiresIn,
-                'name' => $finduser->name
-            ];
-
-            if ($finduser->refreshToken) {
-                $data['refresh_token'] = $finduser->refreshToken;
-            }
             if ($finduser) {
                 //if the user exists, login and show dashboard
                 Auth::login($finduser, true);
-                dd(Auth::user());
-                // return redirect('/dashboard');
+                return redirect('/dashboard');
             } else {
-                //user is not yet created, so create first
                 $newUser = User::create(
                     [
-                        'name' => $user->name,
                         'email' => $user->email,
                         'google_id' => $user->id,
                         'password' => encrypt(''),
                         'avatar' => $user->avatar,
-                    ],
-                    $data
+                        'token' => $user->token,
+                        'expires_in' => $user->expiresIn,
+                        'name' => $user->name,
+                    ]
                 );
                 $newUser->save();
                 //login as the new user
