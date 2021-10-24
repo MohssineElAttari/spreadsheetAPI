@@ -12,10 +12,10 @@
             <div class="container">
 
                 <!-- Image Logo -->
-                <a class="navbar-brand logo-image" href="index.html"><img src="images/logo.svg" alt="alternative"></a>
+                <a class="navbar-brand logo-image" style="text-decoration: none" href="{{ url('/') }}">P2M</a>
 
                 <!-- Text Logo - Use this if you don't have a graphic logo -->
-                <!-- <a class="navbar-brand logo-text" href="index.html">Zinc</a> -->
+                <!-- <a class="navbar-brand logo-text" href="index.html">P2M</a> -->
 
                 <button class="navbar-toggler p-0 border-0" type="button" id="navbarSideCollapse" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -52,7 +52,7 @@
                         </li>
                     </ul>
                     <span class="nav-item">
-                        <a class="btn-solid-sm" href="#contact">Get quote</a>
+                        <a class="btn-solid-sm" href="{{ url('/auth/google/redirect') }}">Log In Using Google Account</a>
                     </span>
                 </div> <!-- end of navbar-collapse -->
             </div> <!-- end of container -->
@@ -66,8 +66,8 @@
                 <div class="row">
                     <div class="col-lg-6 col-xl-5">
                         <div class="text-container">
-                            <div class="section-title">Welcome to Zinc web agency</div>
-                            <h1 class="h1-large">Zinc creates stylish and efficient sites</h1>
+                            <div class="section-title">Welcome to P2M web agency</div>
+                            <h1 class="h1-large">P2M creates stylish and efficient sites</h1>
                             <p class="p-large">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut dignissim,
                                 neque ut ultrices sollicitudin</p>
                             <a class="btn-solid-lg" href="#services">Offered services</a>
