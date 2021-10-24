@@ -42,7 +42,8 @@ class LoginController extends Controller
             if ($finduser) {
                 //if the user exists, login and show dashboard
                 Auth::login($finduser, true);
-                return redirect('/dashboard');
+                dd(Auth::user());
+                // return redirect('/dashboard');
             } else {
                 //user is not yet created, so create first
                 $newUser = User::create(
@@ -59,7 +60,7 @@ class LoginController extends Controller
                 //login as the new user
                 Auth::login($newUser, true);
                 // go to the dashboard
-                dd();
+                dd(Auth::user());
             }
             //catch exceptions
         } catch (Exception $e) {
