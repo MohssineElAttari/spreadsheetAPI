@@ -1,22 +1,69 @@
-@push('stylenav')
+{{-- @push('stylenav')
 <link href="{{ asset('css/footer.css') }}" rel="stylesheet">
-@endpush
+@endpush --}}
 
-<footer class="footer-div">
-    <div class="logo-footer">
-        <svg xmlns="http://www.w3.org/2000/svg" width="140" height="42" viewBox="0 0 140 42">
-            <text id="ACHKayn" transform="translate(0 33)" fill="#fff" font-size="30" font-family="ComicSansMS-Bold, Comic Sans MS" font-weight="700" letter-spacing="0.05em"><tspan x="0" y="0">ACH</tspan><tspan y="0" fill="#407bff">Kayn</tspan></text>
-          </svg>
-    </div>
-    <div class="icons-footer">
-        <i class="fab fa-facebook"></i>
-        <i class="fab fa-instagram"></i>
-        <i class="fab fa-twitter"></i>
-        <i class="fab fa-linkedin-in"></i>
-        <i class="fab fa-github"></i>
-    </div>
-    <div class="w-100 d-flex flex-column align-items-center">
-        <hr style="color: white; width: 100%;">
-        <p style="color: white;">Copyright © 2021 AchKayn | All rights reserved.</p>
-    </div>
-</footer>
+    <!-- Footer -->
+    <div class="footer bg-gray">
+        <img class="decoration-city" src="images/decoration-city.svg" alt="alternative">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h4>Pellentesque aliquet mi eu tortor dictum, non imperdiet ante viverra. Phasellus eget enim orci ut pellentes troc</h4>
+                    <div class="social-container">
+                        <span class="fa-stack">
+                            <a href="#your-link">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-facebook-f fa-stack-1x"></i>
+                            </a>
+                        </span>
+                        <span class="fa-stack">
+                            <a href="#your-link">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-twitter fa-stack-1x"></i>
+                            </a>
+                        </span>
+                        <span class="fa-stack">
+                            <a href="#your-link">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-pinterest-p fa-stack-1x"></i>
+                            </a>
+                        </span>
+                        <span class="fa-stack">
+                            <a href="#your-link">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-instagram fa-stack-1x"></i>
+                            </a>
+                        </span>
+                        <span class="fa-stack">
+                            <a href="#your-link">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-youtube fa-stack-1x"></i>
+                            </a>
+                        </span>
+                    </div> <!-- end of social-container -->
+                </div> <!-- end of col -->
+            </div> <!-- end of row -->
+        </div> <!-- end of container -->
+    </div> <!-- end of footer -->  
+    <!-- end of footer -->
+
+
+    <!-- Copyright -->
+    <div class="copyright bg-gray">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <ul class="list-unstyled li-space-lg p-small">
+                        <li><a href="article.html">Article Details</a></li>
+                        <li><a href="terms.html">Terms & Conditions</a></li>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                    </ul>
+                </div> <!-- end of col -->
+                <div class="col-lg-6">
+                    <p class="p-small statement">Copyright © <a href="#">Your name</a></p>
+                </div> <!-- end of col -->
+            </div> <!-- enf of row -->
+        </div> <!-- end of container -->
+    </div> <!-- end of copyright --> 
+    <!-- end of copyright -->
+    
