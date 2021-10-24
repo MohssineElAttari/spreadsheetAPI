@@ -15,6 +15,10 @@ use Laravel\Socialite\Facades\Socialite;
 |
 */
 
+Route::get('/', function () {
+    return view('home', ['name' => 'Home']);
+});
+
 // login Google
 Route::get('/auth/google/redirect', [LoginController::class, 'redirectToGoogle']);
 Route::get('/auth/google/callback', [LoginController::class, 'handleGoogleCallback']);
@@ -39,8 +43,6 @@ Route::get('testAuth', [SpreadSheetController::class, 'testAuth']);
 // });
 
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
