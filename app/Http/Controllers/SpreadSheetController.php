@@ -17,13 +17,15 @@ class SpreadSheetController extends Controller
 
     private $service;
     private $client;
-    public function __construct()
+
+     public function __construct(Google_Client $client)
     {
-        $clientSG = new ClientSheetGoogle;
-        $this->client = $clientSG->getClient();
-        $this->service = $clientSG->getService();
+        $this->client = $client;
+        $this->service = new \Google_Service_Sheets($client);
+    //    dd();
     }
     //get SpreadsheetID from spreadsheet link.
+
     public function GetSpreadsheetID($link)
     {
         $Arraylink = explode("/", $link);
@@ -34,7 +36,6 @@ class SpreadSheetController extends Controller
     public function getRanges($spreadsheetID)
     {
         $spreadSheet = $this->service->spreadsheets->get($spreadsheetID);
-
         $sheets = $spreadSheet->getSheets();
         $sheetList = array();
         // $sheet->properties->sheetId
@@ -45,27 +46,57 @@ class SpreadSheetController extends Controller
     }
     //Reading data from spreadsheet.
     // Fetching data from your spreadsheet and storing it.
-    public function testAuth()
+
+    public function addSheet()
     {
-        dd(auth('sanctum')->user());
-       
-       
+        // dd($this->client->getAccessToken());
     }
+    // public function testAuth()
+    // {
+    //     dd(auth('sanctum')->user());
+
+
+    // }
     public function readSheet(Request $linkSheet)
     {
-       
+        // dd($this->getClient());
 
-        // $arr_token = (array) ;
-        $accessToken = array(
-            'access_token' => $arr_token['access_token'],
-            'expires_in' => $arr_token['expires_in'],
-        );
+        $accessToken = [
+            'access_token' => auth()->user()->token,
+            'created' => auth()->user()->created_at->timestamp,
+            'expires_in' => auth()->user()->expires_in,
+            'refresh_token' => auth()->user()->refresh_token
+        ];
 
-        dd($this->client->getAccessToken());
+        $this->client->setAccessToken($accessToken);
+
+        if ($this->client->isAccessTokenExpired()) {
+            // if ($this->client->getRefreshToken()) {
+            //     $this->client->fetchAccessTokenWithRefreshToken($this->client->getRefreshToken());
+            // }
+            auth()->user()->update([
+                'token' => $this->client->getAccessToken()['access_token'],
+                'expires_in' => $this->client->getAccessToken()['expires_in'],
+                'created_at' => $this->client->getAccessToken()['created'],
+            ]);
+        }
+
+        // $this->client->refreshToken(auth()->user()->refresh_token);
+
+        // $this->client->setAccessToken($accessToken);
+
+        $spreadsheetID = "1JR2uAjnN67c4sRnfnyGXdzXjz535v6MNgB48pLvVI1I";
+        $get_range = "P2m";
+
+        $response = $this->service->spreadsheets_values->get($spreadsheetID, $get_range);
+        $values = $response->getValues();
+        dd($values);
+
+        // dd($this->client->getAccessToken());
         $spreadsheetID = $this->GetSpreadsheetID($linkSheet->link);
         $get_range = $this->getRanges($spreadsheetID)[0];
 
-        $this->client->setAccessToken('ya29.a0ARrdaM9IfBTfDTBIsQk8Qh8vuMg9z6anvEbB7VZbjLFoRKx7cv9_AwBDWI-AmzIZErst3tkSB1AHkcUiToITofUaGONUHEzdVVZL3lzEJ0YZ9e8xcUV5oHwliiGKqP35dDr6EpPHZtiJ557rmMkOmMWGGeON');
+        $this->client->setAccessToken(auth()->user()->token);
         //Request to get data from spreadsheet.
         $response = $this->service->spreadsheets_values->get($spreadsheetID, $get_range);
         $values = $response->getValues();
@@ -89,6 +120,72 @@ class SpreadSheetController extends Controller
 
         return response(["data" => $list]);
     }
+
+    function getClient()
+    {
+        $client = new Google_Client();
+        $client->setApplicationName('Google Sheets API PHP Quickstart');
+        $client->setScopes(Google_Service_Sheets::SPREADSHEETS);
+        // $client->setAuthConfig(storage_path('credentials.json'));
+        $client->setAccessType('offline');
+        $client->setPrompt('select_account consent');
+
+        // Load previously authorized token from a file, if it exists.
+        // The file token.json stores the user's access and refresh tokens, and is
+        // created automatically when the authorization flow completes for the first
+        // time.
+
+        $accessToken = [
+            'access_token' => auth()->user()->token,
+            'created' => auth()->user()->created_at->timestamp,
+            'expires_in' => auth()->user()->expires_in,
+            'refresh_token' => auth()->user()->refresh_token
+        ];
+
+        $client->setAccessToken($accessToken);
+
+        if ($client->isAccessTokenExpired()) {
+            if ($client->getRefreshToken()) {
+                $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
+            }
+            auth()->user()->update([
+                'token' => $this->client->getAccessToken()['access_token'],
+                'expires_in' => $this->client->getAccessToken()['expires_in'],
+                'created_at' => $this->client->getAccessToken()['created'],
+            ]);
+        }
+
+        // // If there is no previous token or it's expired.
+        // if ($client->isAccessTokenExpired()) {
+        //     // Refresh the token if possible, else fetch a new one.
+        //     if ($client->getRefreshToken()) {
+        //         $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
+        //     } else {
+        //         // Request authorization from the user.
+        //         $authUrl = $client->createAuthUrl();
+        //         printf("Open the following link in your browser:\n%s\n", $authUrl);
+        //         print 'Enter verification code: ';
+        //         $authCode = trim(fgets(STDIN));
+
+        //         // Exchange authorization code for an access token.
+        //         $accessToken = $client->fetchAccessTokenWithAuthCode($authCode);
+        //         $client->setAccessToken($accessToken);
+
+        //         // Check to see if there was an error.
+        //         if (array_key_exists('error', $accessToken)) {
+        //             throw new Exception(join(', ', $accessToken));
+        //         }
+        // }
+        // Save the token to a file.
+        // if (!file_exists(dirname($tokenPath))) {
+        //     mkdir(dirname($tokenPath), 0700, true);
+        // }
+        // file_put_contents($tokenPath, json_encode($client->getAccessToken()));
+
+        return $client;
+    }
+
+
     //add data in spreadSheet
     public function addRowInSheet(Request $request)
     {
