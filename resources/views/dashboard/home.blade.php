@@ -12,8 +12,8 @@
                 </p>
             </div>
             <div class="col">
-                <label for="inputPassword2" class="visually-hidden">Link :</label>
-                <input type="text" class="form-control" id="inputPassword2" placeholder="https://docs.google.com/spreadsheets/d/1JR2uAjnN67c4sRnfnyGXdzXjz535v6MNgB48pLvVI1I/edit#gid=0">
+                <label for="linkSpreadSheet" class="visually-hidden">Link :</label>
+                <input type="text" class="form-control" id="linkSpreadSheet" name="link" placeholder="https://docs.google.com/spreadsheets/d/1JR2uAjnN67c4sRnfnyGXdzXjz535v6MNgB48pLvVI1I/edit#gid=0">
             </div>
             <button type="submit" class="btn btn-primary col-auto">CREATE API</button>
         </form>
