@@ -8,6 +8,7 @@ use Google_Client;
 use Google_Service_Sheets;
 use Google_Service_Sheets_ValueRange;
 use App\Services\ClientSheetGoogle;
+use Exception;
 use Google\Service\AdExchangeBuyerII\Size;
 use Illuminate\Support\Facades\Auth;
 use stdClass;
@@ -67,7 +68,6 @@ class SpreadSheetController extends Controller
         ];
 
         $this->client->setAccessToken($accessToken);
-
         if ($this->client->isAccessTokenExpired()) {
             if ($this->client->getRefreshToken()) {
                 $this->client->fetchAccessTokenWithRefreshToken($this->client->getRefreshToken());
@@ -81,13 +81,16 @@ class SpreadSheetController extends Controller
 
         $spreadsheetID = $this->GetSpreadsheetID($linkSheet->all()['link']);
         $get_range = $this->getRanges($spreadsheetID)[0];
-
-        $response = $this->service->spreadsheets_values->get($spreadsheetID, $get_range);
-        $values = $response->getValues();
+        try {
+            $response = $this->service->spreadsheets_values->get($spreadsheetID, $get_range);
+            $values = $response->getValues();
+        } catch (Exception $ex) {
+            dd($ex->getMessage());
+        }
+        
         // dd($values);
 
         // dd($this->client->getAccessToken());
-
 
         $columns = $values[0];
 
