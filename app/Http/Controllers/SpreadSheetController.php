@@ -10,6 +10,7 @@ use Google_Service_Sheets_ValueRange;
 use App\Services\ClientSheetGoogle;
 use Exception;
 use Google\Service\AdExchangeBuyerII\Size;
+use GrahamCampbell\ResultType\Success;
 use Illuminate\Support\Facades\Auth;
 use stdClass;
 
@@ -60,34 +61,40 @@ class SpreadSheetController extends Controller
     // }
     public function readSheet(Request $linkSheet)
     {
-        $accessToken = [
-            'access_token' => auth()->user()->token,
-            'created' => auth()->user()->created_at->timestamp,
-            'expires_in' => auth()->user()->expires_in,
-            'refresh_token' => auth()->user()->refresh_token
-        ];
+        try {
+            $accessToken = [
+                'access_token' => auth()->user()->token,
+                'created' => auth()->user()->created_at->timestamp,
+                'expires_in' => auth()->user()->expires_in,
+                'refresh_token' => auth()->user()->refresh_token
+            ];
 
-        $this->client->setAccessToken($accessToken);
-        if ($this->client->isAccessTokenExpired()) {
-            if ($this->client->getRefreshToken()) {
-                $this->client->fetchAccessTokenWithRefreshToken($this->client->getRefreshToken());
+            $this->client->setAccessToken($accessToken);
+            if ($this->client->isAccessTokenExpired()) {
+                if ($this->client->getRefreshToken()) {
+                    $this->client->fetchAccessTokenWithRefreshToken($this->client->getRefreshToken());
+                }
+                auth()->user()->update([
+                    'token' => $this->client->getAccessToken()['access_token'],
+                    'expires_in' => $this->client->getAccessToken()['expires_in'],
+                    'created_at' => $this->client->getAccessToken()['created'],
+                ]);
             }
-            auth()->user()->update([
-                'token' => $this->client->getAccessToken()['access_token'],
-                'expires_in' => $this->client->getAccessToken()['expires_in'],
-                'created_at' => $this->client->getAccessToken()['created'],
+
+            $spreadsheetID = $this->GetSpreadsheetID($linkSheet->all()['link']);
+            $get_range = $this->getRanges($spreadsheetID)[0];
+
+            if ($response = $this->service->spreadsheets_values->get($spreadsheetID, $get_range)) {
+                $values = $response->getValues();
+            }
+            
+        } catch (\Throwable $e) {
+            return response([
+                "Success" => false,
+                'Message' => "We received an error that you don't have permission to this document."
             ]);
         }
 
-        $spreadsheetID = $this->GetSpreadsheetID($linkSheet->all()['link']);
-        $get_range = $this->getRanges($spreadsheetID)[0];
-        try {
-            $response = $this->service->spreadsheets_values->get($spreadsheetID, $get_range);
-            $values = $response->getValues();
-        } catch (Exception $ex) {
-            dd($ex->getMessage());
-        }
-        
         // dd($values);
 
         // dd($this->client->getAccessToken());
