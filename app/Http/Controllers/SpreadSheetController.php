@@ -18,11 +18,11 @@ class SpreadSheetController extends Controller
     private $service;
     private $client;
 
-     public function __construct(Google_Client $client)
+    public function __construct(Google_Client $client)
     {
         $this->client = $client;
         $this->service = new \Google_Service_Sheets($client);
-    //    dd();
+        //    dd();
     }
     //get SpreadsheetID from spreadsheet link.
 
@@ -59,8 +59,6 @@ class SpreadSheetController extends Controller
     // }
     public function readSheet(Request $linkSheet)
     {
-        // dd($this->getClient());
-
         $accessToken = [
             'access_token' => auth()->user()->token,
             'created' => auth()->user()->created_at->timestamp,
@@ -71,9 +69,9 @@ class SpreadSheetController extends Controller
         $this->client->setAccessToken($accessToken);
 
         if ($this->client->isAccessTokenExpired()) {
-            // if ($this->client->getRefreshToken()) {
-            //     $this->client->fetchAccessTokenWithRefreshToken($this->client->getRefreshToken());
-            // }
+            if ($this->client->getRefreshToken()) {
+                $this->client->fetchAccessTokenWithRefreshToken($this->client->getRefreshToken());
+            }
             auth()->user()->update([
                 'token' => $this->client->getAccessToken()['access_token'],
                 'expires_in' => $this->client->getAccessToken()['expires_in'],
@@ -81,25 +79,14 @@ class SpreadSheetController extends Controller
             ]);
         }
 
-        // $this->client->refreshToken(auth()->user()->refresh_token);
-
-        // $this->client->setAccessToken($accessToken);
-
-        $spreadsheetID = "1JR2uAjnN67c4sRnfnyGXdzXjz535v6MNgB48pLvVI1I";
-        $get_range = "P2m";
-
-        $response = $this->service->spreadsheets_values->get($spreadsheetID, $get_range);
-        $values = $response->getValues();
-        dd($values);
-
-        // dd($this->client->getAccessToken());
-        $spreadsheetID = $this->GetSpreadsheetID($linkSheet->link);
+        $spreadsheetID = $this->GetSpreadsheetID($linkSheet->all()['link']);
         $get_range = $this->getRanges($spreadsheetID)[0];
 
-        $this->client->setAccessToken(auth()->user()->token);
-        //Request to get data from spreadsheet.
         $response = $this->service->spreadsheets_values->get($spreadsheetID, $get_range);
         $values = $response->getValues();
+        // dd($values);
+
+        // dd($this->client->getAccessToken());
 
 
         $columns = $values[0];
