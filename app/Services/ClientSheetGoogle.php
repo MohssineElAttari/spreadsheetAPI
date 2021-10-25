@@ -1,16 +1,18 @@
 <?php
 
 namespace App\Services;
+
 use Google_Client;
 use Google_Service_Sheets;
+
 class ClientSheetGoogle
 {
     private $client;
 
     // public static $serviceG;
-    private  $service;
+    // private  $service;
 
-    public function __construct()
+    // public function __construct()
     {
         $this->client = new Google_Client();
         $this->client->setApplicationName('Sheet Google API');
@@ -20,13 +22,17 @@ class ClientSheetGoogle
         $this->service = new Google_Service_Sheets($this->client);
     }
 
+
+    /**
+     * Returns an authorized API client.
+     * @return Google_Client the authorized client object
+     */
+
+
+
     public function getService()
     {
         return $this->service;
     }
 
-    public function getClient()
-    {
-        return $this->client;
-    }
 }
