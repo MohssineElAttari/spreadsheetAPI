@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\SpreadSheetController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -23,8 +24,16 @@ Route::get('/', function () {
 Route::get('/auth/google/redirect', [LoginController::class, 'redirectToGoogle']);
 Route::get('/auth/google/callback', [LoginController::class, 'handleGoogleCallback']);
 
+//dashboard
+Route::get('/dashboard', function () {
+    return view('dashboard.home');
+})->name('dashboard');
+
+Route::get('/spreadsheets', [SpreadSheetController::class, 'addSheet'])->name("spreadsheets");
+// Route::post('/create', [LoginController::class, 'redirectToGoogle'])->name("create");
+
 //SpreadSheet
-Route::post('readSheet', [SpreadSheetController::class, 'readSheet']);
+Route::post('readSheet', [SpreadSheetController::class, 'readSheet'])->name("readSheet");
 
 Route::post('addRowInSheet', [SpreadSheetController::class, 'addRowInSheet']);
 
