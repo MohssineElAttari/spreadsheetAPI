@@ -20,14 +20,16 @@ Route::get('/', function () {
     return view('home', ['name' => 'Home']);
 });
 
+// Auth
+
 // login Google
-Route::get('/auth/google/redirect', [LoginController::class, 'redirectToGoogle']);
+Route::get('/auth/google/redirect', [LoginController::class, 'redirectToGoogle'])->name('login');
 Route::get('/auth/google/callback', [LoginController::class, 'handleGoogleCallback']);
 
 //dashboard
-Route::get('/dashboard', function () {
+Route::get('/dashboard' ,function () {
     return view('dashboard.home');
-})->name('dashboard');
+});
 
 Route::get('/spreadsheets', [SpreadSheetController::class, 'addSheet'])->name("spreadsheets");
 // Route::post('/create', [LoginController::class, 'redirectToGoogle'])->name("create");
