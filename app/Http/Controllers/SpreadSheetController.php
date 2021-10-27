@@ -22,6 +22,8 @@ class SpreadSheetController extends Controller
 
     public function __construct(Google_Client $client)
     {
+        $this->middleware('auth');
+
         $this->client = $client;
         $this->service = new \Google_Service_Sheets($client);
         //    dd();
@@ -61,7 +63,8 @@ class SpreadSheetController extends Controller
     // }
     public function readSheet(Request $linkSheet)
     {
-        try {
+        // try {
+            // dd(Auth::user());
             $accessToken = [
                 'access_token' => auth()->user()->token,
                 'created' => auth()->user()->created_at->timestamp,
@@ -88,12 +91,12 @@ class SpreadSheetController extends Controller
                 $values = $response->getValues();
             }
             
-        } catch (\Throwable $e) {
-            return response([
-                "Success" => false,
-                'Message' => "We received an error that you don't have permission to this document."
-            ]);
-        }
+        // } catch (\Throwable $e) {
+        //     return response([
+        //         "Success" => false,
+        //         'Message' => "We received an error that you don't have permission to this document."
+        //     ]);
+        // }
 
         // dd($values);
 
