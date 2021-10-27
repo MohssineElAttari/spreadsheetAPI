@@ -10,13 +10,19 @@
     <link href="{{ asset('css/dashboard.css') }}" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
+    {{-- <script src="https://unpkg.com/@popperjs/core@2" defer></script> --}}
+    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous"> --}}
+    {{-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script> --}}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous">
+    </script>
     <title>SpreadSheets</title>
 </head>
 
 <body>
     <div class="d-flex" id="wrapper">
         <!-- Sidebar -->
-        <div class="bg-white" id="sidebar-wrapper">
+        <div class="bg-white position-relative" id="sidebar-wrapper">
             <div class="sidebar-heading text-center py-4 primary-text fs-4 fw-bold text-uppercase border-bottom">
                 <span>Spread</span>Sheets
             </div>
@@ -27,6 +33,39 @@
                 <a href="{{ route('spreadsheets') }}"
                     class="list-group-item list-group-item-action bg-transparent second-text fw-bold"><i
                         class="fas fa-project-diagram me-2"></i>Spreadsheets</a>
+
+                {{-- <a href="{{ route('create') }}"
+                    class="list-group-item list-group-item-action bg-transparent second-text fw-bold"><i
+                        class="fas fa-chart-line me-2"></i>Create New Spreadsheet</a> --}}
+                {{-- <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button class="list-group-item list-group-item-action bg-transparent text-danger fw-bold">
+                        <i class="fas fa-power-off me-2"></i>Logout
+                    </button>
+                </form> --}}
+            </div>
+            <div class="position-absolute bottom-0 list-group list-group-flush">
+
+                <!-- Default dropright button -->
+                <div class="btn-group dropright d-flex justify-content-center">
+                    <img src="{{ Auth::user()->avatar }}" class="dropdown-toggle w-30 h-30 d-inline-block rounded-circle p-2" style="cursor: pointer"data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#">{{ Auth::user()->name }}</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Separated link</a>
+                        <a class="dropdown-item" href="{{Auth::logout()}}">Logout</a>
+                    </div>
+                </div>
+
+
+                {{-- <a href="{{ route('dashboard') }}"
+                    class="list-group-item list-group-item-action bg-transparent second-text active"><i
+                        class="fas fa-tachometer-alt me-2"></i>Home</a>
+                <a href="{{ route('spreadsheets') }}"
+                    class="list-group-item list-group-item-action bg-transparent second-text fw-bold"><i
+                        class="fas fa-project-diagram me-2"></i>Spreadsheets</a> --}}
+
                 {{-- <a href="{{ route('create') }}"
                     class="list-group-item list-group-item-action bg-transparent second-text fw-bold"><i
                         class="fas fa-chart-line me-2"></i>Create New Spreadsheet</a> --}}
@@ -46,28 +85,6 @@
                 <div class="d-flex align-items-center">
                     <i class="fas fa-align-left primary-text fs-4 me-3" id="menu-toggle"></i>
                     <h2 class="fs-2 m-0">Home</h2>
-                </div>
-
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle second-text fw-bold" href="#" id="navbarDropdown"
-                                role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fas fa-user me-2"></i>Mohssine Elattari
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="#">Profile</a></li>
-                                <li><a class="dropdown-item" href="#">Settings</a></li>
-                                <li><a class="dropdown-item" href="#">Logout</a></li>
-                            </ul>
-                        </li>
-                    </ul>
                 </div>
             </nav>
 
