@@ -36,7 +36,7 @@ class LoginController extends Controller
         try {
             //create a user using socialite driver google
             // dd("voila user");
-            $auth_user = Socialite::driver('google')->stateless()->user();
+            $auth_user = Socialite::driver('google')->user();
             // dd($auth_user);
             $data = [
                 'token' => $auth_user->token,
@@ -93,4 +93,12 @@ class LoginController extends Controller
             dd($e->getMessage());
         }
     }
+    // public function check()
+    // {
+    //     if (Auth::check()) {
+    //         return view('dashboard.home');
+    //     }else {
+    //     return redirect()->to('/');
+    //     }
+    // }
 }
