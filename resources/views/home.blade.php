@@ -27,28 +27,16 @@
                             <a class="nav-link active" aria-current="page" href="#header">Home</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="#projects">Documentation</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="#services">Services</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#projects">Projects</a>
+                            <a class="nav-link" href="#projects">Use Cases</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#pricing">Pricing</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-bs-toggle="dropdown"
-                                aria-expanded="false">Drop</a>
-                            <ul class="dropdown-menu" aria-labelledby="dropdown01">
-                                <li><a class="dropdown-item" href="article.html">Article Details</a></li>
-                                <li>
-                                    <div class="dropdown-divider"></div>
-                                </li>
-                                <li><a class="dropdown-item" href="terms.html">Terms Conditions</a></li>
-                                <li>
-                                    <div class="dropdown-divider"></div>
-                                </li>
-                                <li><a class="dropdown-item" href="privacy.html">Privacy Policy</a></li>
-                            </ul>
                         </li>
                     </ul>
                     <span class="nav-item">
@@ -66,10 +54,11 @@
                 <div class="row">
                     <div class="col-lg-6 col-xl-5">
                         <div class="text-container">
-                            <div class="section-title">Welcome to P2M web agency</div>
-                            <h1 class="h1-large">P2M creates stylish and efficient sites</h1>
-                            <p class="p-large">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut dignissim,
-                                neque ut ultrices sollicitudin</p>
+                            <div class="section-title">Welcome to P2M Platform</div>
+                            <h1 class="h1-large">Turn a Google Spreadsheet
+                                into a JSON API</h1>
+                            <p class="p-large">Connect Google sheets to CRM, API, Website, WordPress, any application or
+                                tool.</p>
                             <a class="btn-solid-lg" href="#services">Offered services</a>
                             <a class="quote" href="#contact"><i class="fas fa-paper-plane"></i>Get quote</a>
                         </div> <!-- end of text-container -->
