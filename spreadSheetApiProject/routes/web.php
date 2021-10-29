@@ -13,10 +13,24 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// login Google
+Route::get('/auth/google/redirect', [LoginController::class, 'redirectToGoogle']);
+Route::get('/auth/google/callback', [LoginController::class, 'handleGoogleCallback']);
 
-Auth::routes();
+//dashboard
+Route::get('/dashboard',[LoginController::class, 'check'])->name('dashboard');
+
+Route::get('/spreadsheets', [SpreadSheetController::class, 'addSheet'])->name("spreadsheets");
+// Route::post('/create', [LoginController::class, 'redirectToGoogle'])->name("create");
+
+//SpreadSheet
+Route::post('readSheet', [SpreadSheetController::class, 'readSheet'])->name("readSheet");
+
+Route::post('addRowInSheet', [SpreadSheetController::class, 'addRowInSheet']);
+
+Route::put('updateRowInSheet', [SpreadSheetController::class, 'updateRowInSheet']);
+
+
+// Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
