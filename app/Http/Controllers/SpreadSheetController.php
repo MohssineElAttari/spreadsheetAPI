@@ -7,23 +7,47 @@ use Illuminate\Http\Request;
 use Google_Client;
 use Google_Service_Sheets;
 use Google_Service_Sheets_ValueRange;
-use App\Services\ClientSheetGoogle;
-use Exception;
-use Google\Service\AdExchangeBuyerII\Size;
-use GrahamCampbell\ResultType\Success;
 use Illuminate\Support\Facades\Auth;
 use stdClass;
+use App\User;
 
 class SpreadSheetController extends Controller
 {
 
-    private $service;
-    private $client;
+    protected $service;
+    // protected $client;
+    protected $user;
+
 
     public function __construct(Google_Client $client)
     {
-        $this->client = $client;
-        $this->service = new \Google_Service_Sheets($client);
+        $this->middleware(function ($request, $next) use ($client) {
+            $this->user = Auth::user();
+            // dd($this->user);
+            $accessToken = [
+                'access_token' => auth()->user()->token,
+                'created' => auth()->user()->created_at->timestamp,
+                'expires_in' => auth()->user()->expires_in,
+                'refresh_token' => auth()->user()->refresh_token
+            ];
+
+            $client->setAccessToken($accessToken);
+
+            if ($client->isAccessTokenExpired()) {
+                if ($client->getRefreshToken()) {
+                    $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
+                }
+                auth()->user()->update([
+                    'token' =>  $client->getAccessToken()['access_token'],
+                    'expires_in' =>  $client->getAccessToken()['expires_in'],
+                    'created_at' =>  $client->getAccessToken()['created'],
+                ]);
+            }
+
+            $client->refreshToken(auth()->user()->refresh_token);
+            $this->service = new  Google_Service_Sheets($client);
+            return $next($request);
+        });
         //    dd();
     }
     //get SpreadsheetID from spreadsheet link.
@@ -61,33 +85,34 @@ class SpreadSheetController extends Controller
     // }
     public function readSheet(Request $linkSheet)
     {
+        // dd($this->user);
         try {
-            $accessToken = [
-                'access_token' => auth()->user()->token,
-                'created' => auth()->user()->created_at->timestamp,
-                'expires_in' => auth()->user()->expires_in,
-                'refresh_token' => auth()->user()->refresh_token
-            ];
+        // $accessToken = [
+        //     'access_token' => auth()->user()->token,
+        //     'created' => auth()->user()->created_at->timestamp,
+        //     'expires_in' => auth()->user()->expires_in,
+        //     'refresh_token' => auth()->user()->refresh_token
+        // ];
 
-            $this->client->setAccessToken($accessToken);
-            if ($this->client->isAccessTokenExpired()) {
-                if ($this->client->getRefreshToken()) {
-                    $this->client->fetchAccessTokenWithRefreshToken($this->client->getRefreshToken());
-                }
-                auth()->user()->update([
-                    'token' => $this->client->getAccessToken()['access_token'],
-                    'expires_in' => $this->client->getAccessToken()['expires_in'],
-                    'created_at' => $this->client->getAccessToken()['created'],
-                ]);
-            }
+        // $this->client->setAccessToken($accessToken);
+        // if ($this->client->isAccessTokenExpired()) {
+        //     if ($this->client->getRefreshToken()) {
+        //         $this->client->fetchAccessTokenWithRefreshToken($this->client->getRefreshToken());
+        //     }
+        //     auth()->user()->update([
+        //         'token' => $this->client->getAccessToken()['access_token'],
+        //         'expires_in' => $this->client->getAccessToken()['expires_in'],
+        //         'created_at' => $this->client->getAccessToken()['created'],
+        //     ]);
+        // }
 
-            $spreadsheetID = $this->GetSpreadsheetID($linkSheet->all()['link']);
-            $get_range = $this->getRanges($spreadsheetID)[0];
+        $spreadsheetID = $this->GetSpreadsheetID($linkSheet->all()['link']);
+        $get_range = $this->getRanges($spreadsheetID)[0];
 
-            if ($response = $this->service->spreadsheets_values->get($spreadsheetID, $get_range)) {
-                $values = $response->getValues();
-            }
-            
+        if ($response = $this->service->spreadsheets_values->get($spreadsheetID, $get_range)) {
+            $values = $response->getValues();
+        }
+
         } catch (\Throwable $e) {
             return response([
                 "Success" => false,
