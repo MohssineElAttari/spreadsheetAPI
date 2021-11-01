@@ -3,7 +3,6 @@
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\SpreadSheetController;
 use Illuminate\Support\Facades\Route;
-use Laravel\Socialite\Facades\Socialite;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,40 +15,37 @@ use Laravel\Socialite\Facades\Socialite;
 |
 */
 
-Route::get('/', function () {
-    return view('home', ['name' => 'Home']);
-});
-
 // login Google
 Route::get('/auth/google/redirect', [LoginController::class, 'redirectToGoogle']);
 Route::get('/auth/google/callback', [LoginController::class, 'handleGoogleCallback']);
 
-//dashboard
-Route::get('/dashboard',[LoginController::class, 'check'])->name('dashboard');
-
-Route::get('/spreadsheets', [SpreadSheetController::class, 'addSheet'])->name("spreadsheets");
-// Route::post('/create', [LoginController::class, 'redirectToGoogle'])->name("create");
-
-//SpreadSheet
-Route::post('readSheet', [SpreadSheetController::class, 'readSheet'])->name("readSheet");
-
-Route::post('addRowInSheet', [SpreadSheetController::class, 'addRowInSheet']);
-
-Route::put('updateRowInSheet', [SpreadSheetController::class, 'updateRowInSheet']);
-
-Route::get('testAuth', [SpreadSheetController::class, 'testAuth']);
-
-// Route::get('/auth/google/redirect', function () {
-//     return Socialite::driver('google')->redirect();
-// });
-
-// Route::get('/auth/google/callback', function () {
-//     $user = Socialite::driver('google')->user();
-
-//     // $user->token
-// });
+Route::get('/logout', function () {
+    auth()->logout();
+    return redirect('/');
+});
 
 
+// Auth::routes();
 
+Route::get('/', function () {
+    return view('home');
+});
 
-// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::group(['middleware' => 'web'], function () {
+
+    // Auth::routes();
+
+    //dashboard
+    Route::get('/dashboard', function () {
+        return view('dashboard.home');
+    })->name('dashboard');
+    Route::get('/spreadsheets', [SpreadSheetController::class, 'addSheet'])->name("spreadsheets");
+    // Route::post('/create', [LoginController::class, 'redirectToGoogle'])->name("create");
+
+    //SpreadSheet
+    Route::post('readSheet', [SpreadSheetController::class, 'readSheet'])->name("readSheet");
+
+    Route::post('addRowInSheet', [SpreadSheetController::class, 'addRowInSheet']);
+
+    Route::put('updateRowInSheet', [SpreadSheetController::class, 'updateRowInSheet']);
+});

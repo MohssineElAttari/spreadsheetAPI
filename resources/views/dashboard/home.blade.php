@@ -6,6 +6,7 @@
         <h2 class="fs-4 mb-3">Create new API</h2>
         <form class="row g-3" action="{{ route('readSheet') }}" method="post">
             @csrf
+            {{-- <a class="" href="#">{{ Auth::user()->token }}</a> --}}
             <h3>Google Spreadsheet URL:</h3>
             <div class="col-auto">
                 <p>Paste google spreadsheet URL here from address bar.

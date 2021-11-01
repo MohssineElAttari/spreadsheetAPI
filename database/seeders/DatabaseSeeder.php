@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\TimeEntry;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -14,6 +13,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        TimeEntry::factory()->count(10)->create();
+        // \App\Models\User::factory(10)->create();
     }
 }

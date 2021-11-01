@@ -54,7 +54,7 @@
                         <a class="dropdown-item" href="#">{{ Auth::user()->name }}</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="#">Separated link</a>
-                        <a class="dropdown-item" href="{{Auth::logout()}}">Logout</a>
+                        {{-- <a class="dropdown-item" href="{{Auth::logout()}}">Logout</a> --}}
                     </div>
                 </div>
 
