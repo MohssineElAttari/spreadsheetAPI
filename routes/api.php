@@ -19,7 +19,6 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 Route::group(['prefix' => 'v1'], function () {
-
     Route::middleware(['cors'])->group(function () {
         Route::post('/{idSpread}', [SpreadSheetController::class, 'readSpreadSheet']);
     });
