@@ -93,12 +93,12 @@ class LoginController extends Controller
             dd($e->getMessage());
         }
     }
-    public function check()
-    {
-        if (Auth::check()) {
-            return view('dashboard.home');
-        }else {
-        return redirect()->to('/');
-        }
-    }
+    // public function check()
+    // {
+    //     if (Auth::check()) {
+    //         return view('dashboard.home');
+    //     }else {
+    //     return redirect()->to('/');
+    //     }
+    // }
 }
