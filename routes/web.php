@@ -34,7 +34,6 @@ Route::get('/', function () {
 Route::group(['middleware' => 'web'], function () {
 
     // Auth::routes();
-
     //dashboard
     Route::get('/dashboard', function () {
         return view('dashboard.home');

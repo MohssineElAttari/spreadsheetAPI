@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\SpreadSheetController;
 use App\Models\Spread;
 use App\Models\User;
 use Google_Client;
@@ -10,6 +11,8 @@ use Google_Service_Sheets;
 // use Google_Service_Sheets_ValueRange;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use stdClass;
 
 class SpreadController extends Controller
 {
@@ -18,40 +21,28 @@ class SpreadController extends Controller
     // protected $client;
     protected $user;
 
-    public function __construct()
-    {
-    }
-
     public function getClient($id)
     {
-        // $user = User::find($id);
         $spread = Spread::where('registration_number', $id)->first();
-        $user=User::find($spread->user_id);
-        // $user = DB::table('users')
-        //     ->join('spreads', 'users.id', '=', 'spreads.user_id')
-        //     ->select('users.*')
-        //     ->where('spreads.registration_number', $id)
-        //     ->get();
-        // dd($user);
+        $user = User::find($spread->user_id);
+
+        $client = new Google_Client();
+        $client->setAuthConfig(Storage::path('client_secret.json'));
         $accessToken = [
             'access_token' => $user->token,
             'created' => $user->created_at->timestamp,
             'expires_in' => $user->expires_in,
             'refresh_token' => $user->refresh_token
         ];
-        // dd($accessToken);
-        $this->client = new Google_Client();
-        $this->client->setAccessToken($accessToken);
-        dd($this->client);
-        return  $this->client;
+        $client->setAccessToken($accessToken);
+        return $client;
     }
 
     public function showData($id)
     {
         // dd($id);
-        $this->client = $this->getClient($id);
         // dd($this->client);
-        $this->service = new  Google_Service_Sheets($this->client);
+        $this->service = new  Google_Service_Sheets($this->getClient($id));
         $spreadsheetID = "1JR2uAjnN67c4sRnfnyGXdzXjz535v6MNgB48pLvVI1I";
         $get_range = "P2m";
 

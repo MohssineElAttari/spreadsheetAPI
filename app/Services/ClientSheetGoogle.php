@@ -12,7 +12,7 @@ class ClientSheetGoogle
     // public static $serviceG;
     // private  $service;
 
-    // public function __construct()
+    public function __construct()
     {
         $this->client = new Google_Client();
         $this->client->setApplicationName('Sheet Google API');

@@ -19,13 +19,12 @@ class SpreadSheetController extends Controller
     protected $service;
     // protected $client;
     protected $user;
-
-
+    public static $clientAPI;
     public function __construct(Google_Client $client)
     {
         $this->middleware(function ($request, $next) use ($client) {
             $this->user = Auth::user();
-            dd($this->user);
+            // dd($this->user);
             $accessToken = [
                 'access_token' => auth()->user()->token,
                 'created' => auth()->user()->created_at->timestamp,
@@ -34,7 +33,6 @@ class SpreadSheetController extends Controller
             ];
             // dd($accessToken);
             $client->setAccessToken($accessToken);
-            dd($client);
             if ($client->isAccessTokenExpired()) {
                 if ($client->getRefreshToken()) {
                     $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
@@ -47,13 +45,22 @@ class SpreadSheetController extends Controller
             }
 
             $client->refreshToken(auth()->user()->refresh_token);
+
+
             $this->service = new  Google_Service_Sheets($client);
+
             return $next($request);
         });
+        SpreadSheetController::set_client_api($client);
+        // SpreadSheetController::getClientAPI();
+        // dd(SpreadSheetController::$clientAPI);
         //    dd();
     }
     //get SpreadsheetID from spreadsheet link.
-
+    public static function set_client_api($clientapi)
+    {
+        SpreadSheetController::$clientAPI = $clientapi;
+    }
     public function GetSpreadsheetID($link)
     {
         $Arraylink = explode("/", $link);
@@ -74,7 +81,6 @@ class SpreadSheetController extends Controller
     }
     //Reading data from spreadsheet.
     // Fetching data from your spreadsheet and storing it.
-
     public function createApi(Request $linkSheet)
     {
         try {
