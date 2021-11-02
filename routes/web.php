@@ -39,7 +39,7 @@ Route::group(['middleware' => 'web'], function () {
     Route::get('/dashboard', function () {
         return view('dashboard.home');
     })->name('dashboard');
-    Route::get('/spreadsheets', [SpreadSheetController::class, 'addSheet'])->name("spreadsheets");
+    Route::get('/create', [SpreadSheetController::class, 'addSheet'])->name("create");
     // Route::post('/create', [LoginController::class, 'redirectToGoogle'])->name("create");
 
     //SpreadSheet
@@ -48,4 +48,8 @@ Route::group(['middleware' => 'web'], function () {
     Route::post('addRowInSheet', [SpreadSheetController::class, 'addRowInSheet']);
 
     Route::put('updateRowInSheet', [SpreadSheetController::class, 'updateRowInSheet']);
+
+    Route::Post('createApi', [SpreadSheetController::class, 'createApi'])->name('createApi');
+
+    Route::get('spreadsheets', [SpreadSheetController::class, 'ShowpreadSheet'])->name('show');
 });
