@@ -15,7 +15,9 @@ class CreateSpreadsTable extends Migration
     {
         Schema::create('spreads', function (Blueprint $table) {
             $table->id();
-            $table->string('id_spread');
+            $table->string('registration_number');
+            $table->string('spreadsheetID');
+            $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });
     }
