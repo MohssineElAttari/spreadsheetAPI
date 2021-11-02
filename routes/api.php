@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\SpreadSheetController;
+use App\Http\Controllers\API\SpreadController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,6 +20,6 @@ use Illuminate\Support\Facades\Route;
 // });
 Route::group(['prefix' => 'v1'], function () {
     Route::middleware(['cors'])->group(function () {
-        Route::post('/{idSpread}', [SpreadSheetController::class, 'readSpreadSheet']);
+        Route::get('/{id}', [SpreadController::class, 'showData']);
     });
 });
