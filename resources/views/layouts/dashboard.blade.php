@@ -30,7 +30,7 @@
                 <a href="{{ route('dashboard') }}"
                     class="list-group-item list-group-item-action bg-transparent second-text active"><i
                         class="fas fa-tachometer-alt me-2"></i>Home</a>
-                <a href="{{ route('spreadsheets') }}"
+                <a href="{{ route('show') }}"
                     class="list-group-item list-group-item-action bg-transparent second-text fw-bold"><i
                         class="fas fa-project-diagram me-2"></i>Spreadsheets</a>
 
