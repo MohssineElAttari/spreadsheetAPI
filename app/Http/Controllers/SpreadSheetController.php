@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-
+use App\Models\Spread;
 use Illuminate\Http\Request;
 use Google_Client;
 use Google_Service_Sheets;
@@ -10,6 +10,8 @@ use Google_Service_Sheets_ValueRange;
 use Illuminate\Support\Facades\Auth;
 use stdClass;
 use App\User;
+use Exception;
+use Illuminate\Support\Facades\DB;
 
 class SpreadSheetController extends Controller
 {
@@ -23,16 +25,16 @@ class SpreadSheetController extends Controller
     {
         $this->middleware(function ($request, $next) use ($client) {
             $this->user = Auth::user();
-            // dd($this->user);
+            dd($this->user);
             $accessToken = [
                 'access_token' => auth()->user()->token,
                 'created' => auth()->user()->created_at->timestamp,
                 'expires_in' => auth()->user()->expires_in,
                 'refresh_token' => auth()->user()->refresh_token
             ];
-
+            // dd($accessToken);
             $client->setAccessToken($accessToken);
-
+            dd($client);
             if ($client->isAccessTokenExpired()) {
                 if ($client->getRefreshToken()) {
                     $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
@@ -73,6 +75,54 @@ class SpreadSheetController extends Controller
     //Reading data from spreadsheet.
     // Fetching data from your spreadsheet and storing it.
 
+    public function createApi(Request $linkSheet)
+    {
+        try {
+            $spreadsheetID = $this->GetSpreadsheetID($linkSheet->all()['link']);
+            $get_range = $this->getRanges($spreadsheetID)[0];
+
+            if ($this->service->spreadsheets_values->get($spreadsheetID, $get_range)) {
+                $registration_number = bin2hex(random_bytes(8));;
+                $id = Auth::user()->id;
+                $spread = Spread::find($spreadsheetID);
+                // dd($spread);
+                if (!$spread) {
+                    return response([
+                        "Success" => false,
+                        'Message' => "Spraeds already exist"
+                    ]);
+                } else {
+                    $spread = Spread::create([
+                        'user_id' => $id,
+                        'registration_number' => $registration_number,
+                        'spreadsheetID' => $spreadsheetID,
+                    ]);
+
+                    return redirect()->route('show')
+                        ->with('success', 'spreads lists');
+                }
+            }
+        } catch (Exception $e) {
+            return response([
+                "Success" => false,
+                'Message' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function ShowpreadSheet()
+    {
+        // dd('wata sir');
+        $spreads = DB::table('spreads')
+            ->join('users', 'users.id', '=', 'spreads.user_id')
+            ->select('spreads.*')
+            ->where('users.id', Auth::user()->id)
+            ->get()->toArray();
+        // $data['spreads'] = $spreads;
+        // dd($spreads);
+        return view('dashboard.spreadsheets')->with(['spreads' => $spreads]);
+    }
+
     public function addSheet()
     {
         // dd($this->client->getAccessToken());
@@ -87,32 +137,13 @@ class SpreadSheetController extends Controller
     {
         // dd($this->user);
         try {
-        // $accessToken = [
-        //     'access_token' => auth()->user()->token,
-        //     'created' => auth()->user()->created_at->timestamp,
-        //     'expires_in' => auth()->user()->expires_in,
-        //     'refresh_token' => auth()->user()->refresh_token
-        // ];
 
-        // $this->client->setAccessToken($accessToken);
-        // if ($this->client->isAccessTokenExpired()) {
-        //     if ($this->client->getRefreshToken()) {
-        //         $this->client->fetchAccessTokenWithRefreshToken($this->client->getRefreshToken());
-        //     }
-        //     auth()->user()->update([
-        //         'token' => $this->client->getAccessToken()['access_token'],
-        //         'expires_in' => $this->client->getAccessToken()['expires_in'],
-        //         'created_at' => $this->client->getAccessToken()['created'],
-        //     ]);
-        // }
+            $spreadsheetID = $this->GetSpreadsheetID($linkSheet->all()['link']);
+            $get_range = $this->getRanges($spreadsheetID)[0];
 
-        $spreadsheetID = $this->GetSpreadsheetID($linkSheet->all()['link']);
-        $get_range = $this->getRanges($spreadsheetID)[0];
-
-        if ($response = $this->service->spreadsheets_values->get($spreadsheetID, $get_range)) {
-            $values = $response->getValues();
-        }
-
+            if ($response = $this->service->spreadsheets_values->get($spreadsheetID, $get_range)) {
+                $values = $response->getValues();
+            }
         } catch (\Throwable $e) {
             return response([
                 "Success" => false,
@@ -120,12 +151,8 @@ class SpreadSheetController extends Controller
             ]);
         }
 
-        // dd($values);
-
-        // dd($this->client->getAccessToken());
-
         $columns = $values[0];
-
+        dd($values[10]);
         $list = array();
         for ($i = 0; $i < count($values); $i++) {
             if ($i == 0) continue;
@@ -134,12 +161,10 @@ class SpreadSheetController extends Controller
             // dd($value);
             $obj = new stdClass();
             for ($j = 0; $j < count($columns); $j++) {
-                // dd($value[$j]);
                 $obj->{$columns[$j]} = $value[$j]; //rda
             }
             array_push($list, $obj);
         }
-
         return response(["data" => $list]);
     }
 
@@ -151,11 +176,6 @@ class SpreadSheetController extends Controller
         // $client->setAuthConfig(storage_path('credentials.json'));
         $client->setAccessType('offline');
         $client->setPrompt('select_account consent');
-
-        // Load previously authorized token from a file, if it exists.
-        // The file token.json stores the user's access and refresh tokens, and is
-        // created automatically when the authorization flow completes for the first
-        // time.
 
         $accessToken = [
             'access_token' => auth()->user()->token,
