@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::group(['prefix' => 'v1'], function () {
-    Route::middleware(['cors'])->group(function () {
-        Route::get('/{id}', [SpreadController::class, 'showData']);
-    });
+    // Route::middleware(['cors'])->group(function () {
+    Route::get('/{id}', [SpreadController::class, 'showData']);
+    // });
 });
