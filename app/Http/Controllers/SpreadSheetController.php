@@ -12,7 +12,7 @@ use stdClass;
 use App\User;
 use Exception;
 use Illuminate\Support\Facades\DB;
-
+use Carbon\Carbon;
 class SpreadSheetController extends Controller
 {
 
@@ -92,21 +92,21 @@ class SpreadSheetController extends Controller
                 $id = Auth::user()->id;
                 $spread = Spread::find($spreadsheetID);
                 // dd($spread);
-                if (!$spread) {
-                    return response([
-                        "Success" => false,
-                        'Message' => "Spraeds already exist"
-                    ]);
-                } else {
-                    $spread = Spread::create([
-                        'user_id' => $id,
-                        'registration_number' => $registration_number,
-                        'spreadsheetID' => $spreadsheetID,
-                    ]);
+                // if (!$spread) {
+                //     return response([
+                //         "Success" => false,
+                //         'Message' => "Spraeds already exist"
+                //     ]);
+                // } else {
+                Spread::create([
+                    'user_id' => $id,
+                    'registration_number' => $registration_number,
+                    'spreadsheetID' => $spreadsheetID,
+                ]);
 
-                    return redirect()->route('show')
-                        ->with('success', 'spreads lists');
-                }
+                return redirect()->route('show')
+                    ->with('success', 'spreads lists');
+                // }
             }
         } catch (Exception $e) {
             return response([
