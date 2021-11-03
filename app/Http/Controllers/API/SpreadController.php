@@ -40,11 +40,11 @@ class SpreadController extends Controller
 
     public function showData($id)
     {
-        // dd($id);
-        // dd($this->client);
+        $spread = Spread::where('registration_number', $id)->first();
+
         $this->service = new  Google_Service_Sheets($this->getClient($id));
-        $spreadsheetID = "1JR2uAjnN67c4sRnfnyGXdzXjz535v6MNgB48pLvVI1I";
-        $get_range = "P2m";
+        $spreadsheetID = $spread->spreadsheetID;
+        $get_range = "A:Z";
 
         if ($response = $this->service->spreadsheets_values->get($spreadsheetID, $get_range)) {
             $values = $response->getValues();
@@ -61,10 +61,10 @@ class SpreadController extends Controller
             $obj = new stdClass();
             for ($j = 0; $j < count($columns); $j++) {
                 // dd($value[$j]);
-                $obj->{$columns[$j]} = $value[$j]; //rda
+                $obj->{$columns[$j]} = $value[$j] ?? ""; //rda
             }
             array_push($list, $obj);
         }
-        return response(["data" => $list]);
+        return response($list);
     }
 }
