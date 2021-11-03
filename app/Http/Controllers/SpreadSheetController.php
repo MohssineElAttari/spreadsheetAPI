@@ -171,68 +171,8 @@ class SpreadSheetController extends Controller
             }
             array_push($list, $obj);
         }
-        return response(["data" => $list]);
+        return response([$get_range => $list]);
     }
-
-    function getClient()
-    {
-        $client = new Google_Client();
-        $client->setApplicationName('Google Sheets API PHP Quickstart');
-        $client->setScopes(Google_Service_Sheets::SPREADSHEETS);
-        // $client->setAuthConfig(storage_path('credentials.json'));
-        $client->setAccessType('offline');
-        $client->setPrompt('select_account consent');
-
-        $accessToken = [
-            'access_token' => auth()->user()->token,
-            'created' => auth()->user()->created_at->timestamp,
-            'expires_in' => auth()->user()->expires_in,
-            'refresh_token' => auth()->user()->refresh_token
-        ];
-
-        $client->setAccessToken($accessToken);
-
-        if ($client->isAccessTokenExpired()) {
-            if ($client->getRefreshToken()) {
-                $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
-            }
-            auth()->user()->update([
-                'token' => $this->client->getAccessToken()['access_token'],
-                'expires_in' => $this->client->getAccessToken()['expires_in'],
-                'created_at' => $this->client->getAccessToken()['created'],
-            ]);
-        }
-
-        // // If there is no previous token or it's expired.
-        // if ($client->isAccessTokenExpired()) {
-        //     // Refresh the token if possible, else fetch a new one.
-        //     if ($client->getRefreshToken()) {
-        //         $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
-        //     } else {
-        //         // Request authorization from the user.
-        //         $authUrl = $client->createAuthUrl();
-        //         printf("Open the following link in your browser:\n%s\n", $authUrl);
-        //         print 'Enter verification code: ';
-        //         $authCode = trim(fgets(STDIN));
-
-        //         // Exchange authorization code for an access token.
-        //         $accessToken = $client->fetchAccessTokenWithAuthCode($authCode);
-        //         $client->setAccessToken($accessToken);
-
-        //         // Check to see if there was an error.
-        //         if (array_key_exists('error', $accessToken)) {
-        //             throw new Exception(join(', ', $accessToken));
-        //         }
-        // }
-        // Save the token to a file.
-        // if (!file_exists(dirname($tokenPath))) {
-        //     mkdir(dirname($tokenPath), 0700, true);
-        // }
-        // file_put_contents($tokenPath, json_encode($client->getAccessToken()));
-
-        return $client;
-    }
-
 
     //add data in spreadSheet
     public function addRowInSheet(Request $request)
