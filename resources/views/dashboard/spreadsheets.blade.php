@@ -25,7 +25,12 @@
                             <th scope="row">{{ $spread->id }}</th>
                             <td><a style="text-decoration: none; color: forestgreen;" target="_blanck" href="http://localhost:8000/api/v1/{{ $spread->registration_number }}">http://localhost:8000/api/v1/{{ $spread->registration_number }}</a></td>
                             <td><a style="text-decoration: none; color: forestgreen;" target="_blanck" href="https://docs.google.com/spreadsheets/d/{{ $spread->spreadsheetID }}/edit#gid=0">https://docs.google.com/spreadsheets/d/{{ $spread->spreadsheetID }}/edit#gid=0</a></td>
-                            <td>{{ $spread->created_at }}</td>
+                            <td>{{
+                            // //  \Carbon\Carbon::parse($spread->created_at)->subDays(30)
+                            //  \Carbon\Carbon::parse($spread->created_at)->diffForHumans(\Carbon\Carbon::now());
+                                // $spread->created_at->diffForHumans();
+                                \Carbon\Carbon::createFromTimeStamp(strtotime($spread->created_at))->diffForHumans()
+                            }}</td>
                             <td>
                                 {{-- <button class="btn btn-success editbtn" value="{{ $spread->id }}">Edit</button> --}}
                                 {{-- @csrf --}}
